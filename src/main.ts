@@ -14,13 +14,17 @@ const button = document.createElement("button");
 button.textContent = "🎷";
 app.append(button);
 
-//Creates Counter
-let num_notes:number = 0;
-button.addEventListener('click', (Increment: MouseEvent) => {
-    console.log(Increment); // This logs the event object
-    console.log('Notes Played!');
+//Incrementer
+let num_notes: number = 0;
+function incrementNotes(): void {
     num_notes++;
     counter.textContent = `Notes Played: ${num_notes}`;
-  });
+}
+
+//Creates Counter
+button.addEventListener("click",incrementNotes);
 const counter = document.createElement("div");
 app.append(counter);
+
+//Auto-Clicker Logic
+setInterval(incrementNotes,1000);
