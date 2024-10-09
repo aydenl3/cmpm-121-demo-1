@@ -16,15 +16,27 @@ app.append(button);
 
 //Incrementer
 let num_notes: number = 0;
-function incrementNotes(): void {
-    num_notes++;
-    counter.textContent = `Notes Played: ${num_notes}`;
+function incrementNotes(amt: number): void {
+  num_notes += amt;
+  counter.textContent = `Notes Played: ${num_notes}`;
 }
 
 //Creates Counter
-button.addEventListener("click",incrementNotes);
+button.addEventListener("click", () => incrementNotes(1));
 const counter = document.createElement("div");
 app.append(counter);
 
 //Auto-Clicker Logic
-setInterval(incrementNotes,1000);
+let start_time = performance.now();
+let cache: number = 0;
+requestAnimationFrame(animate);
+function animate():void {
+  cache += (performance.now() - start_time);
+  if (cache >= 1000){
+    cache -= 1000;
+    incrementNotes(1);
+  }
+  start_time = performance.now();
+  requestAnimationFrame(animate);
+  //console.log(cache);
+}
