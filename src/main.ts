@@ -24,8 +24,12 @@ const growth_rate_display = document.createElement("div");
 app.append(growth_rate_display);
 
 //Creates Upgrade Count Displays
-const upgrade_count_display = document.createElement("div");
-app.append(upgrade_count_display);
+const upgrade_count_displayA = document.createElement("div");
+app.append(upgrade_count_displayA);
+const upgrade_count_displayB = document.createElement("div");
+app.append(upgrade_count_displayB);
+const upgrade_count_displayC = document.createElement("div");
+app.append(upgrade_count_displayC);
 
 //Incrementers
 let num_notes: number = 0;
@@ -43,11 +47,13 @@ const upgrade_buttonA = document.createElement("button");
 upgrade_buttonA.textContent = "🔔";
 app.append(upgrade_buttonA);
 let numUpgradesA: number = 0;
+let costUpgradeA: number = 10;
 upgrade_buttonA.addEventListener("click", boughtUpgradeA);
 upgrade_buttonA.disabled = true;
-function boughtUpgradeA(){
-  incrementGrowthRate(0.1,10);
+function boughtUpgradeA() {
+  incrementGrowthRate(0.1, costUpgradeA);
   numUpgradesA++;
+  costUpgradeA *= 1.15;
 }
 
 //Creates Upgrade B
@@ -55,50 +61,53 @@ const upgrade_buttonB = document.createElement("button");
 upgrade_buttonB.textContent = "🎹";
 app.append(upgrade_buttonB);
 let numUpgradesB: number = 0;
+let costUpgradeB: number = 100;
 upgrade_buttonB.addEventListener("click", boughtUpgradeB);
 upgrade_buttonB.disabled = true;
-function boughtUpgradeB(){
-  incrementGrowthRate(2,100);
+function boughtUpgradeB() {
+  incrementGrowthRate(2, costUpgradeB);
   numUpgradesB++;
+  costUpgradeB *= 1.15;
 }
 //Creates Upgrade C
 const upgrade_buttonC = document.createElement("button");
 upgrade_buttonC.textContent = "🎸";
 app.append(upgrade_buttonC);
 let numUpgradesC: number = 0;
+let costUpgradeC: number = 1000;
 upgrade_buttonC.addEventListener("click", boughtUpgradeC);
 upgrade_buttonC.disabled = true;
-function boughtUpgradeC(){
-  incrementGrowthRate(50,1000);
+function boughtUpgradeC() {
+  incrementGrowthRate(50, costUpgradeC);
   numUpgradesC++;
+  costUpgradeC*= 1.15;
 }
 
 //Button Cost Checker
-function updateDisplay(): void{
+function updateDisplay(): void {
   counter.textContent = `Notes Played: ${Math.trunc(num_notes * 10) / 10}`;
   growth_rate_display.textContent = `Bandpower: ${Math.trunc(growth_rate * 10) / 10} Notes Per Second`;
-  upgrade_count_display.textContent = `Upgrade A: ${Math.floor(numUpgradesA)} Upgrade B: ${Math.floor(numUpgradesB)} Upgrade C: ${Math.floor(numUpgradesC)}`;
-  if (num_notes >= 10 && num_notes < 100) {
+  upgrade_count_displayA.textContent = `Num A's: ${Math.floor(numUpgradesA)}cost of A:${Math.trunc(costUpgradeA * 100) / 100}`;
+  upgrade_count_displayB.textContent = `Num B's: ${Math.floor(numUpgradesB)}cost of B:${Math.trunc(costUpgradeB * 100) / 100}`;
+  upgrade_count_displayC.textContent = `Num C's: ${Math.floor(numUpgradesC)}cost of C:${Math.trunc(costUpgradeC * 100) / 100}`;
+  if (num_notes >= costUpgradeA) {
     upgrade_buttonA.disabled = false;
-    upgrade_buttonB.disabled = true;
-    upgrade_buttonC.disabled = true;
-  }
-  else if(num_notes >= 100 && num_notes < 1000) {
-    upgrade_buttonA.disabled = false;
-    upgrade_buttonB.disabled = false;
-    upgrade_buttonC.disabled = true;
-  }
-  else if(num_notes >= 1000) {
-    upgrade_buttonA.disabled = false;
-    upgrade_buttonB.disabled = false;
-    upgrade_buttonC.disabled = false;
   }
   else{
     upgrade_buttonA.disabled = true;
+  }
+  if (num_notes >= costUpgradeB) {
+    upgrade_buttonB.disabled = false;
+  }
+  else{
     upgrade_buttonB.disabled = true;
+  }
+  if (num_notes >= costUpgradeC) {
+    upgrade_buttonC.disabled = false;
+  }
+  else{
     upgrade_buttonC.disabled = true;
   }
-
 }
 
 //Auto-Clicker Logic
