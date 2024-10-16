@@ -34,20 +34,39 @@ function incrementGrowthRate(amt: number, cost: number): void {
   growth_rate += amt;
 }
 
+interface Item {
+  name: string,
+  cost: number,
+  rate: number,
+  num: number,
+  emoji: string
+};
+
+const availableItems : Item[] = [
+  {name: "Bell", cost: 10, rate: 0.1, num: 0,emoji:"🔔"},
+  {name: "Piano", cost: 100, rate: 2, num: 0,emoji:"🎹"},
+  {name: "Guitar", cost: 1000, rate: 50, num: 0,emoji:"🎸"},
+];
+
 //Creates Upgrade A
 const upgrade_count_displayA = document.createElement("div");
 app.append(upgrade_count_displayA);
 const upgrade_buttonA = document.createElement("button");
 upgrade_buttonA.textContent = "🔔";
 app.append(upgrade_buttonA);
-let numUpgradesA: number = 0;
-let costUpgradeA: number = 10;
-upgrade_buttonA.addEventListener("click", boughtUpgradeA);
+upgrade_buttonA.addEventListener("click", () => boughtUpgrade("Bell"));
 upgrade_buttonA.disabled = true;
-function boughtUpgradeA() {
-  incrementGrowthRate(0.1, costUpgradeA);
-  numUpgradesA++;
-  costUpgradeA *= 1.15;
+
+
+function boughtUpgrade(name:string) {
+  for (const item of availableItems){
+    if(name == item.name){
+      incrementGrowthRate(item.rate, item.cost);
+      item.num++;
+      item.cost*=1.15;
+    }
+
+  }
 }
 
 //Creates Upgrade B
@@ -56,15 +75,9 @@ app.append(upgrade_count_displayB);
 const upgrade_buttonB = document.createElement("button");
 upgrade_buttonB.textContent = "🎹";
 app.append(upgrade_buttonB);
-let numUpgradesB: number = 0;
-let costUpgradeB: number = 100;
-upgrade_buttonB.addEventListener("click", boughtUpgradeB);
+upgrade_buttonB.addEventListener("click", () => boughtUpgrade("Piano"));
 upgrade_buttonB.disabled = true;
-function boughtUpgradeB() {
-  incrementGrowthRate(2, costUpgradeB);
-  numUpgradesB++;
-  costUpgradeB *= 1.15;
-}
+
 //Creates Upgrade C
 
 const upgrade_count_displayC = document.createElement("div");
@@ -72,40 +85,43 @@ app.append(upgrade_count_displayC);
 const upgrade_buttonC = document.createElement("button");
 upgrade_buttonC.textContent = "🎸";
 app.append(upgrade_buttonC);
-let numUpgradesC: number = 0;
-let costUpgradeC: number = 1000;
-upgrade_buttonC.addEventListener("click", boughtUpgradeC);
+upgrade_buttonC.addEventListener("click", () => boughtUpgrade("Guitar"));
 upgrade_buttonC.disabled = true;
-function boughtUpgradeC() {
-  incrementGrowthRate(50, costUpgradeC);
-  numUpgradesC++;
-  costUpgradeC *= 1.15;
-}
+
 
 //Button Cost Checker
 function updateDisplay(): void {
   counter.textContent = `Groove Garnered: ${Math.trunc(num_notes * 10) / 10}`;
   growth_rate_display.textContent = `Bandpower: ${Math.trunc(growth_rate * 10) / 10} Groove Per Second`;
-  upgrade_count_displayA.textContent = `Num 🔔's: ${Math.floor(numUpgradesA)} | Cost of 🔔:${Math.trunc(costUpgradeA * 100) / 100}`;
-  upgrade_count_displayB.textContent = `Num 🎹's: ${Math.floor(numUpgradesB)} | Cost of 🎹:${Math.trunc(costUpgradeB * 100) / 100}`;
-  upgrade_count_displayC.textContent = `Num 🎸's: ${Math.floor(numUpgradesC)} | Cost of 🎸:${Math.trunc(costUpgradeC * 100) / 100}`;
-  if (num_notes >= costUpgradeA) {
-    upgrade_buttonA.disabled = false;
-  } else {
-    upgrade_buttonA.disabled = true;
-  }
-  if (num_notes >= costUpgradeB) {
-    upgrade_buttonB.disabled = false;
-  } else {
-    upgrade_buttonB.disabled = true;
-  }
-  if (num_notes >= costUpgradeC) {
-    upgrade_buttonC.disabled = false;
-  } else {
-    upgrade_buttonC.disabled = true;
-  }
+  upgrade_count_displayA.textContent = updateUpgrades("Bell");
+  upgrade_count_displayB.textContent = updateUpgrades("Piano");
+  upgrade_count_displayC.textContent = updateUpgrades("Guitar");
+  upgrade_buttonA.disabled = buttonEnableLogic("Bell");
+  upgrade_buttonB.disabled = buttonEnableLogic("Piano");
+  upgrade_buttonC.disabled = buttonEnableLogic("Guitar");
 }
 
+function updateUpgrades(name:string): string {
+  for(const item of availableItems){
+    if(name == item.name){
+      return(`Num ${item.emoji}'s: ${Math.floor(item.num)} | Cost of ${item.emoji}:${Math.trunc(item.cost * 10) / 10}`)
+    }
+  }
+  return("ERROR, no object found with that name");
+}
+function buttonEnableLogic(name:string): boolean{
+  for(const item of availableItems){
+    if(name == item.name){
+      if(num_notes >= item.cost){
+        return (false);
+      }
+      else{
+        return (true);
+      }
+    }
+  }
+  return true;
+}
 //Auto-Clicker Logic
 let start_time = performance.now();
 let cache: number = 0;
