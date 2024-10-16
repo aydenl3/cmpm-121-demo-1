@@ -3,7 +3,7 @@ import "./style.css";
 const app: HTMLDivElement = document.querySelector("#app")!;
 
 //Creates Game Title Text
-const gameName = "My amazing game";
+const gameName = "Jam Clicker";
 document.title = gameName;
 const header = document.createElement("h1");
 header.innerHTML = gameName;
@@ -23,14 +23,6 @@ app.append(counter);
 const growth_rate_display = document.createElement("div");
 app.append(growth_rate_display);
 
-//Creates Upgrade Count Displays
-const upgrade_count_displayA = document.createElement("div");
-app.append(upgrade_count_displayA);
-const upgrade_count_displayB = document.createElement("div");
-app.append(upgrade_count_displayB);
-const upgrade_count_displayC = document.createElement("div");
-app.append(upgrade_count_displayC);
-
 //Incrementers
 let num_notes: number = 0;
 function incrementNotes(amt: number): void {
@@ -43,6 +35,8 @@ function incrementGrowthRate(amt: number, cost: number): void {
 }
 
 //Creates Upgrade A
+const upgrade_count_displayA = document.createElement("div");
+app.append(upgrade_count_displayA);
 const upgrade_buttonA = document.createElement("button");
 upgrade_buttonA.textContent = "🔔";
 app.append(upgrade_buttonA);
@@ -57,6 +51,8 @@ function boughtUpgradeA() {
 }
 
 //Creates Upgrade B
+const upgrade_count_displayB = document.createElement("div");
+app.append(upgrade_count_displayB);
 const upgrade_buttonB = document.createElement("button");
 upgrade_buttonB.textContent = "🎹";
 app.append(upgrade_buttonB);
@@ -70,6 +66,9 @@ function boughtUpgradeB() {
   costUpgradeB *= 1.15;
 }
 //Creates Upgrade C
+
+const upgrade_count_displayC = document.createElement("div");
+app.append(upgrade_count_displayC);
 const upgrade_buttonC = document.createElement("button");
 upgrade_buttonC.textContent = "🎸";
 app.append(upgrade_buttonC);
@@ -80,32 +79,29 @@ upgrade_buttonC.disabled = true;
 function boughtUpgradeC() {
   incrementGrowthRate(50, costUpgradeC);
   numUpgradesC++;
-  costUpgradeC*= 1.15;
+  costUpgradeC *= 1.15;
 }
 
 //Button Cost Checker
 function updateDisplay(): void {
-  counter.textContent = `Notes Played: ${Math.trunc(num_notes * 10) / 10}`;
-  growth_rate_display.textContent = `Bandpower: ${Math.trunc(growth_rate * 10) / 10} Notes Per Second`;
-  upgrade_count_displayA.textContent = `Num A's: ${Math.floor(numUpgradesA)}cost of A:${Math.trunc(costUpgradeA * 100) / 100}`;
-  upgrade_count_displayB.textContent = `Num B's: ${Math.floor(numUpgradesB)}cost of B:${Math.trunc(costUpgradeB * 100) / 100}`;
-  upgrade_count_displayC.textContent = `Num C's: ${Math.floor(numUpgradesC)}cost of C:${Math.trunc(costUpgradeC * 100) / 100}`;
+  counter.textContent = `Groove Garnered: ${Math.trunc(num_notes * 10) / 10}`;
+  growth_rate_display.textContent = `Bandpower: ${Math.trunc(growth_rate * 10) / 10} Groove Per Second`;
+  upgrade_count_displayA.textContent = `Num 🔔's: ${Math.floor(numUpgradesA)} | Cost of 🔔:${Math.trunc(costUpgradeA * 100) / 100}`;
+  upgrade_count_displayB.textContent = `Num 🎹's: ${Math.floor(numUpgradesB)} | Cost of 🎹:${Math.trunc(costUpgradeB * 100) / 100}`;
+  upgrade_count_displayC.textContent = `Num 🎸's: ${Math.floor(numUpgradesC)} | Cost of 🎸:${Math.trunc(costUpgradeC * 100) / 100}`;
   if (num_notes >= costUpgradeA) {
     upgrade_buttonA.disabled = false;
-  }
-  else{
+  } else {
     upgrade_buttonA.disabled = true;
   }
   if (num_notes >= costUpgradeB) {
     upgrade_buttonB.disabled = false;
-  }
-  else{
+  } else {
     upgrade_buttonB.disabled = true;
   }
   if (num_notes >= costUpgradeC) {
     upgrade_buttonC.disabled = false;
-  }
-  else{
+  } else {
     upgrade_buttonC.disabled = true;
   }
 }
