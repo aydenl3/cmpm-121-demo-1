@@ -23,79 +23,100 @@ app.append(counter);
 const growth_rate_display = document.createElement("div");
 app.append(growth_rate_display);
 
-//Incrementers
-let num_notes: number = 0;
-function incrementNotes(amt: number): void {
-  num_notes += amt;
-}
-
-function incrementGrowthRate(amt: number, cost: number): void {
-  num_notes -= cost;
-  growth_rate += amt;
-}
-
 interface Item {
   name: string;
   cost: number;
   rate: number;
   num: number;
   emoji: string;
+  description: string;
+  display: HTMLDivElement;
+  button: HTMLButtonElement;
 }
+const dummydiv = document.createElement("div");
+const dummybutton = document.createElement("button");
+const MILLISECOND_PER_SECOND = 1000;
+const ITEM_COST_GROWTH_RATE = 1.15;
 
 const availableItems: Item[] = [
-  { name: "Bell", cost: 10, rate: 0.1, num: 0, emoji: "🔔" },
-  { name: "Piano", cost: 100, rate: 2, num: 0, emoji: "🎹" },
-  { name: "Guitar", cost: 1000, rate: 50, num: 0, emoji: "🎸" },
+  {
+    name: "Bell",
+    cost: 10,
+    rate: 0.1,
+    num: 0,
+    emoji: "🔔",
+    description: "There's a reason you don't see these",
+    display: dummydiv,
+    button: dummybutton,
+  },
+  {
+    name: "Piano",
+    cost: 100,
+    rate: 2,
+    num: 0,
+    emoji: "🎹",
+    description: "Soft and soulful...",
+    display: dummydiv,
+    button: dummybutton,
+  },
+  {
+    name: "Guitar",
+    cost: 1000,
+    rate: 50,
+    num: 0,
+    emoji: "🎸",
+    description: "The foundation of any great band! (probably)",
+    display: dummydiv,
+    button: dummybutton,
+  },
+  {
+    name: "Drum",
+    cost: 5000,
+    rate: 200,
+    num: 0,
+    emoji: "🥁",
+    description: "Jam On!",
+    display: dummydiv,
+    button: dummybutton,
+  },
+  {
+    name: "Mic",
+    cost: 15000,
+    rate: 1000,
+    num: 0,
+    emoji: "🎙️",
+    description: "The ultimate human instrument",
+    display: dummydiv,
+    button: dummybutton,
+  },
 ];
 
-//Creates Upgrade A
-const upgrade_count_displayA = document.createElement("div");
-app.append(upgrade_count_displayA);
-const upgrade_buttonA = document.createElement("button");
-upgrade_buttonA.textContent = "🔔";
-app.append(upgrade_buttonA);
-upgrade_buttonA.addEventListener("click", () => boughtUpgrade("Bell"));
-upgrade_buttonA.disabled = true;
-
-function boughtUpgrade(name: string) {
-  for (const item of availableItems) {
-    if (name == item.name) {
-      incrementGrowthRate(item.rate, item.cost);
-      item.num++;
-      item.cost *= 1.15;
-    }
-  }
+function makeButton(item: Item) {
+  item.display = document.createElement("div");
+  app.append(item.display);
+  const description = document.createElement("div");
+  description.textContent = item.description;
+  app.append(description);
+  item.button = document.createElement("button");
+  item.button.textContent = item.emoji;
+  app.append(item.button);
+  item.button.addEventListener("click", () => boughtUpgrade(item.name));
+  item.button.disabled = true;
+}
+for (const item of availableItems) {
+  makeButton(item);
 }
 
-//Creates Upgrade B
-const upgrade_count_displayB = document.createElement("div");
-app.append(upgrade_count_displayB);
-const upgrade_buttonB = document.createElement("button");
-upgrade_buttonB.textContent = "🎹";
-app.append(upgrade_buttonB);
-upgrade_buttonB.addEventListener("click", () => boughtUpgrade("Piano"));
-upgrade_buttonB.disabled = true;
 
-//Creates Upgrade C
-
-const upgrade_count_displayC = document.createElement("div");
-app.append(upgrade_count_displayC);
-const upgrade_buttonC = document.createElement("button");
-upgrade_buttonC.textContent = "🎸";
-app.append(upgrade_buttonC);
-upgrade_buttonC.addEventListener("click", () => boughtUpgrade("Guitar"));
-upgrade_buttonC.disabled = true;
 
 //Button Cost Checker
 function updateDisplay(): void {
   counter.textContent = `Groove Garnered: ${Math.trunc(num_notes * 10) / 10}`;
   growth_rate_display.textContent = `Bandpower: ${Math.trunc(growth_rate * 10) / 10} Groove Per Second`;
-  upgrade_count_displayA.textContent = updateUpgrades("Bell");
-  upgrade_count_displayB.textContent = updateUpgrades("Piano");
-  upgrade_count_displayC.textContent = updateUpgrades("Guitar");
-  upgrade_buttonA.disabled = buttonEnableLogic("Bell");
-  upgrade_buttonB.disabled = buttonEnableLogic("Piano");
-  upgrade_buttonC.disabled = buttonEnableLogic("Guitar");
+  for (const item of availableItems) {
+    item.display.textContent = updateUpgrades(item.name);
+    item.button.disabled = buttonEnableLogic(item.name);
+  }
 }
 
 function updateUpgrades(name: string): string {
@@ -118,15 +139,35 @@ function buttonEnableLogic(name: string): boolean {
   }
   return true;
 }
+//Incrementers
+let num_notes: number = 0;
+function incrementNotes(amt: number): void {
+  num_notes += amt;
+}
+
+function incrementGrowthRate(amt: number, cost: number): void {
+  num_notes -= cost;
+  growth_rate += amt;
+}
+function boughtUpgrade(name: string) {
+  for (const item of availableItems) {
+    if (name == item.name) {
+      incrementGrowthRate(item.rate, item.cost);
+      item.num++;
+      item.cost *= ITEM_COST_GROWTH_RATE;
+    }
+  }
+}
+
 //Auto-Clicker Logic
 let start_time = performance.now();
-let cache: number = 0;
+let ms_elapsed: number = 0;
 let growth_rate: number = 0;
 requestAnimationFrame(animate);
 function animate(): void {
-  cache += performance.now() - start_time;
-  if (cache >= 1000) {
-    cache -= 1000;
+  ms_elapsed += performance.now() - start_time;
+  if (ms_elapsed >= MILLISECOND_PER_SECOND) {
+    ms_elapsed -= MILLISECOND_PER_SECOND;
     incrementNotes(growth_rate);
   }
   start_time = performance.now();
