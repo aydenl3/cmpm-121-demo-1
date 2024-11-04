@@ -100,44 +100,32 @@ function makeButton(item: Item) {
   item.button = document.createElement("button");
   item.button.textContent = item.emoji;
   app.append(item.button);
-  item.button.addEventListener("click", () => boughtUpgrade(item.name));
+  item.button.addEventListener("click", () => boughtUpgrade(item));
   item.button.disabled = true;
 }
 for (const item of availableItems) {
   makeButton(item);
 }
 
-
-
 //Button Cost Checker
 function updateDisplay(): void {
   counter.textContent = `Groove Garnered: ${Math.trunc(num_notes * 10) / 10}`;
   growth_rate_display.textContent = `Bandpower: ${Math.trunc(growth_rate * 10) / 10} Groove Per Second`;
   for (const item of availableItems) {
-    item.display.textContent = updateUpgrades(item.name);
-    item.button.disabled = buttonEnableLogic(item.name);
+    item.display.textContent = updateUpgrades(item);
+    item.button.disabled = buttonEnableLogic(item);
   }
 }
 
-function updateUpgrades(name: string): string {
-  for (const item of availableItems) {
-    if (name == item.name) {
+function updateUpgrades(item: Item): string {
       return `Num ${item.emoji}'s: ${Math.floor(item.num)} | Cost of ${item.emoji}:${Math.trunc(item.cost * 10) / 10}`;
-    }
-  }
-  return "ERROR, no object found with that name";
 }
-function buttonEnableLogic(name: string): boolean {
-  for (const item of availableItems) {
-    if (name == item.name) {
+function buttonEnableLogic(item: Item): boolean {
       if (num_notes >= item.cost) {
         return false;
       } else {
         return true;
       }
-    }
-  }
-  return true;
 }
 //Incrementers
 let num_notes: number = 0;
@@ -149,14 +137,10 @@ function incrementGrowthRate(amt: number, cost: number): void {
   num_notes -= cost;
   growth_rate += amt;
 }
-function boughtUpgrade(name: string) {
-  for (const item of availableItems) {
-    if (name == item.name) {
+function boughtUpgrade(item: Item) {
       incrementGrowthRate(item.rate, item.cost);
       item.num++;
       item.cost *= ITEM_COST_GROWTH_RATE;
-    }
-  }
 }
 
 //Auto-Clicker Logic
