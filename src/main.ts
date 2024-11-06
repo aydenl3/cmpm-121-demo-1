@@ -12,6 +12,7 @@ app.append(header);
 //Creates Button
 const button = document.createElement("button");
 button.textContent = "🎷";
+button.className = "circular-button";
 app.append(button);
 button.addEventListener("click", () => incrementNotes(1));
 
@@ -118,14 +119,14 @@ function updateDisplay(): void {
 }
 
 function updateUpgrades(item: Item): string {
-      return `Num ${item.emoji}'s: ${Math.floor(item.num)} | Cost of ${item.emoji}:${Math.trunc(item.cost * 10) / 10}`;
+  return `Num ${item.emoji}'s: ${Math.floor(item.num)} | Cost of ${item.emoji}:${Math.trunc(item.cost * 10) / 10}`;
 }
 function buttonEnableLogic(item: Item): boolean {
-      if (num_notes >= item.cost) {
-        return false;
-      } else {
-        return true;
-      }
+  if (num_notes >= item.cost) {
+    return false;
+  } else {
+    return true;
+  }
 }
 //Incrementers
 let num_notes: number = 0;
@@ -138,9 +139,9 @@ function incrementGrowthRate(amt: number, cost: number): void {
   growth_rate += amt;
 }
 function boughtUpgrade(item: Item) {
-      incrementGrowthRate(item.rate, item.cost);
-      item.num++;
-      item.cost *= ITEM_COST_GROWTH_RATE;
+  incrementGrowthRate(item.rate, item.cost);
+  item.num++;
+  item.cost *= ITEM_COST_GROWTH_RATE;
 }
 
 //Auto-Clicker Logic
