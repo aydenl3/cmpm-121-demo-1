@@ -5,7 +5,6 @@ Max-Emlien Kluiwstra-Desaclle
 https://github.com/MaxKluiwstraDescalle/cmpm-121-demo-1.git
 Utilized implementation of Big Round Button
 
-
 Sunny Han
 https://github.com/6YuQing6/cat-fishing-cmpm121-demo1.git
 Utilized implementation of background color changes

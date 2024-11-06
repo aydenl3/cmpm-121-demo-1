@@ -77,11 +77,11 @@ button:focus-visible {
   }
 }
 .circular-button {
-  border-radius: 50%; 
-  width: 320px; 
+  border-radius: 50%;
+  width: 320px;
   height: 320px;
-  border: 2px solid #ff20f0; 
-  background-color: #d9b3f5; 
+  border: 2px solid #ff20f0;
+  background-color: #d9b3f5;
   color: white;
   font-size: 4em;
   font-weight: bold;
